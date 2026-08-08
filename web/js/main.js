@@ -97,7 +97,16 @@ const HUB_URL = (() => {
 const backHubBtn = $('btn-back-hub');
 const embeddedInHub = window.self !== window.top;
 backHubBtn.href = HUB_URL;
-backHubBtn.hidden = false;
+// The shared Sound/Vibration toggles live in the hub now. When embedded, hide
+// them (and the redundant in-panel Back button — the hub's player bar handles
+// going back). The game still honors the shared settings automatically.
+if (embeddedInHub) {
+  toggleSound.closest('.row').hidden = true;
+  toggleHaptics.closest('.row').hidden = true;
+  backHubBtn.hidden = true;
+} else {
+  backHubBtn.hidden = false;
+}
 backHubBtn.addEventListener('click', (e) => {
   scene.sound.play('button');
   if (embeddedInHub) {
