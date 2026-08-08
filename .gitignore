@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# Python (icon tooling)
+__pycache__/
+*.pyc
+
+# Node (local test tooling only)
+node_modules/
