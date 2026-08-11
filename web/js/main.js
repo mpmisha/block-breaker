@@ -2,6 +2,7 @@
 // Mirrors Block Grid's main.js wiring.
 import { GameScene } from './scene.js';
 import { SettingsStore } from './storage.js';
+import { resolveLang, applyLang, isValidLang, t } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -18,6 +19,56 @@ const dom = {
 
 const scene = new GameScene(canvas, dom);
 
+// ---- Captions we may need to re-translate on a live language switch ----
+let lastGameOverLevel = null;
+let lastVictoryLevels = null;
+
+// ---- i18n: resolve + apply the platform language, then translate the DOM ----
+
+function translateDom() {
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
+    el.textContent = t(el.getAttribute('data-i18n'));
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+    el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria')));
+  });
+  // Dynamic strings (level HUD + panel line) come from the scene's live state.
+  scene.updateHud();
+  // Re-apply any open overlay captions in the new language.
+  if (lastGameOverLevel != null) {
+    $('go-caption').textContent = t('reachedLevel', { n: lastGameOverLevel });
+  }
+  if (lastVictoryLevels != null) {
+    $('victory-caption').textContent = t('clearedAll', { n: lastVictoryLevels });
+  }
+}
+
+function setLanguage(code, persist = false) {
+  applyLang(code, persist);
+  translateDom();
+}
+
+// Initial language: URL ?lang= → localStorage 'lang' → navigator auto-detect.
+setLanguage(resolveLang());
+
+// Live updates from the hub (same-origin postMessage) when language changes
+// while this game is open in the hub's iframe player.
+window.addEventListener('message', (e) => {
+  if (e.origin !== location.origin) return;
+  const data = e.data;
+  if (data && data.type === 'playground:lang' && isValidLang(data.lang)) {
+    setLanguage(data.lang);
+  }
+});
+
+// Also honor a language change made in another same-origin tab (e.g. the hub
+// standalone) via the shared localStorage 'lang' key.
+window.addEventListener('storage', (e) => {
+  if (e.key === 'lang' && isValidLang(e.newValue)) {
+    setLanguage(e.newValue);
+  }
+});
+
 // ---- HUD ----
 
 function setHearts(current, max) {
@@ -30,8 +81,8 @@ function setHearts(current, max) {
 }
 
 function setLevel(level, total) {
-  $('hud-level').textContent = `Level ${level}`;
-  $('settings-level').textContent = `Level ${level} of ${total}`;
+  $('hud-level').textContent = t('levelHud', { n: level });
+  $('settings-level').textContent = t('levelOf', { n: level, total });
 }
 
 // ---- Gear ----
@@ -124,7 +175,8 @@ backHubBtn.addEventListener('click', (e) => {
 const gameoverOverlay = $('gameover-overlay');
 
 function openGameOver({ level }) {
-  $('go-caption').textContent = `You reached Level ${level}`;
+  lastGameOverLevel = level;
+  $('go-caption').textContent = t('reachedLevel', { n: level });
   gameoverOverlay.hidden = false;
 }
 
@@ -140,7 +192,8 @@ $('btn-try-again').addEventListener('click', () => {
 const victoryOverlay = $('victory-overlay');
 
 function openVictory({ levels }) {
-  $('victory-caption').textContent = `You cleared all ${levels} levels!`;
+  lastVictoryLevels = levels;
+  $('victory-caption').textContent = t('clearedAll', { n: levels });
   victoryOverlay.hidden = false;
 }
 
@@ -156,5 +209,13 @@ $('btn-play-again').addEventListener('click', () => {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+  });
+  // When a new SW takes control (skipWaiting + clients.claim), reload once so
+  // the fresh shell is running. Guard against reload loops.
+  let reloadedForSw = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (reloadedForSw) return;
+    reloadedForSw = true;
+    window.location.reload();
   });
 }

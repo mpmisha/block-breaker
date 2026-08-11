@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" href="icons/icon-180.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -24,53 +24,53 @@
   <canvas id="game"></canvas>
 
   <header id="hud">
-    <div class="hearts" id="hud-hearts" aria-label="Lives"></div>
+    <div class="hearts" id="hud-hearts" data-i18n-aria="livesAria" aria-label="Lives"></div>
     <div class="level" id="hud-level">Level 1</div>
-    <button class="gear" id="gear" aria-label="Settings">⚙︎</button>
+    <button class="gear" id="gear" data-i18n-aria="settingsAria" aria-label="Settings">⚙︎</button>
   </header>
 
   <!-- Settings overlay -->
   <div class="overlay" id="settings-overlay" hidden>
     <div class="scrim" data-dismiss="settings"></div>
-    <div class="panel" role="dialog" aria-label="Settings">
-      <h2>Settings</h2>
+    <div class="panel" role="dialog" data-i18n-aria="settings" aria-label="Settings">
+      <h2 data-i18n="settings">Settings</h2>
       <p class="panel-best" id="settings-level">Level 1 of 12</p>
 
       <div class="row">
-        <span class="row-label">Sound</span>
+        <span class="row-label" data-i18n="sound">Sound</span>
         <button class="toggle" id="toggle-sound" role="switch"><span class="knob"></span></button>
       </div>
 
       <div class="row">
-        <span class="row-label">Vibration</span>
+        <span class="row-label" data-i18n="vibration">Vibration</span>
         <button class="toggle" id="toggle-haptics" role="switch"><span class="knob"></span></button>
       </div>
 
-      <button class="btn primary" id="btn-new-game">Restart from Level 1</button>
-      <a class="btn secondary" id="btn-back-hub" hidden>← Back to Games</a>
-      <button class="btn secondary" id="btn-close">Close</button>
+      <button class="btn primary" id="btn-new-game" data-i18n="restartFromLevel1">Restart from Level 1</button>
+      <a class="btn secondary" id="btn-back-hub" data-i18n="backToGames" hidden>← Back to Games</a>
+      <button class="btn secondary" id="btn-close" data-i18n="close">Close</button>
     </div>
   </div>
 
   <!-- Game over overlay -->
   <div class="overlay" id="gameover-overlay" hidden>
     <div class="scrim"></div>
-    <div class="panel gameover" role="dialog" aria-label="Out of hearts">
+    <div class="panel gameover" role="dialog" data-i18n-aria="outOfHeartsAria" aria-label="Out of hearts">
       <div class="go-emoji">💔</div>
-      <h2>Out of Hearts</h2>
+      <h2 data-i18n="outOfHearts">Out of Hearts</h2>
       <p class="go-caption" id="go-caption">You reached Level 1</p>
-      <button class="btn primary" id="btn-try-again">Try Again</button>
+      <button class="btn primary" id="btn-try-again" data-i18n="tryAgain">Try Again</button>
     </div>
   </div>
 
   <!-- Victory overlay -->
   <div class="overlay" id="victory-overlay" hidden>
     <div class="scrim"></div>
-    <div class="panel gameover" role="dialog" aria-label="You win">
+    <div class="panel gameover" role="dialog" data-i18n-aria="youWinAria" aria-label="You win">
       <div class="go-emoji">🏆</div>
-      <h2>You Win!</h2>
+      <h2 data-i18n="youWin">You Win!</h2>
       <p class="go-caption" id="victory-caption">You cleared all levels!</p>
-      <button class="btn primary" id="btn-play-again">Play Again</button>
+      <button class="btn primary" id="btn-play-again" data-i18n="playAgain">Play Again</button>
     </div>
   </div>
 

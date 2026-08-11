@@ -9,6 +9,7 @@ import { css } from './color.js';
 import { BrickTextureCache, drawPaddle, drawBall, makeBackgroundCanvas, roundRect } from './textures.js';
 import { SoundPlayer, Haptics } from './audio.js';
 import { SettingsStore } from './storage.js';
+import { t } from './i18n.js';
 
 const HUD_HEIGHT = 64;
 const GAP_TOP = 12;
@@ -452,15 +453,19 @@ export class GameScene {
 
   drawBanner(ctx, now) {
     let text = null;
-    if (this.game.phase === Phase.ready && !this.overlayOpen) text = 'Tap to launch';
-    else if (this.game.phase === Phase.levelClear) text = 'Level Cleared!';
+    if (this.game.phase === Phase.ready && !this.overlayOpen) text = t('tapToLaunch');
+    else if (this.game.phase === Phase.levelClear) text = t('levelCleared');
     if (!text) return;
 
     ctx.save();
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+    ctx.direction = document.documentElement.dir === 'rtl' ? 'rtl' : 'ltr';
     const big = this.game.phase === Phase.levelClear;
-    ctx.font = `${big ? 800 : 700} ${big ? 34 : 20}px "Baloo 2", system-ui, sans-serif`;
+    const family = document.documentElement.dir === 'rtl'
+      ? '"Fredoka", "Baloo 2", system-ui, sans-serif'
+      : '"Baloo 2", system-ui, sans-serif';
+    ctx.font = `${big ? 800 : 700} ${big ? 34 : 20}px ${family}`;
     const y = big ? this.height * 0.42 : this.paddle.y - 46;
     let alpha = 0.9;
     if (this.game.phase === Phase.ready) {

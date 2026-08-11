@@ -9,6 +9,11 @@
   font-family: "Baloo 2", system-ui, -apple-system, sans-serif;
 }
 
+/* Hebrew has no Baloo 2 glyphs — use a rounded Hebrew-capable font. */
+[lang="he"], [dir="rtl"] {
+  font-family: "Fredoka", "Baloo 2", system-ui, -apple-system, sans-serif;
+}
+
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 /* The hidden attribute must win over explicit display (rows, buttons). */
@@ -195,3 +200,13 @@ html, body {
   from { opacity: 0; transform: translateY(24px) scale(0.94); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
+
+/* Back-to-Games arrow: direction-aware so it points "back" in each locale. */
+#btn-back-hub::before { content: "← "; }
+[dir="rtl"] #btn-back-hub::before { content: "→ "; }
+
+/* ---- RTL chrome mirroring (gameplay canvas stays orientation-neutral) ---- */
+[dir="rtl"] .hearts { left: auto; right: 18px; }
+[dir="rtl"] .gear { right: auto; left: 16px; }
+[dir="rtl"] .toggle .knob { left: auto; right: 3px; transition: right 0.15s ease; }
+[dir="rtl"] .toggle.on .knob { right: 27px; left: auto; }
