@@ -1,6 +1,6 @@
 // Offline-first service worker. Caches the whole app shell so Block Breaker
 // runs with no network once installed to the home screen.
-const CACHE = 'block-breaker-v6';
+const CACHE = 'block-breaker-v7';
 
 const ASSETS = [
   './',
