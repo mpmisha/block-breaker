@@ -1,3 +1,4 @@
+import './telemetry.js';
 // Entry point: wires the DOM HUD/overlays to the canvas GameScene.
 // Mirrors Block Grid's main.js wiring.
 import { GameScene } from './scene.js';

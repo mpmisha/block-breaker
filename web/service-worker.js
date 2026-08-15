@@ -1,6 +1,6 @@
 // Offline-first service worker. Caches the whole app shell so Block Breaker
 // runs with no network once installed to the home screen.
-const CACHE = 'block-breaker-v4';
+const CACHE = 'block-breaker-v5';
 
 const ASSETS = [
   './',
@@ -17,6 +17,7 @@ const ASSETS = [
   './js/audio.js',
   './js/storage.js',
   './js/i18n.js',
+  './js/telemetry.js',
   './icons/icon-180.png',
   './icons/icon-192.png',
   './icons/icon-512.png',
